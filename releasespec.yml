@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Test Execution starting...
+      - AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION AWS_REPO=$AWS_REPO PROJECT_NAME=WebserviceDemoProject RELEASE_NAME=AWS TESTSET_NAME=Test docker-compose run automation     
+  post_build:
+    commands:
+      - aws s3 cp Results s3://$S3_BUCKET_NAME/$ENV --recursive
+      - docker-compose down

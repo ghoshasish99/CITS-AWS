@@ -1,0 +1,11 @@
+version: "3"
+services:
+  automation:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_REPO}:latest
+    container_name: automation-test
+    environment:
+      - PROJ=Projects/${PROJECT_NAME}
+      - RELEASE=${RELEASE_NAME}
+      - TESTSET=${TESTSET_NAME}    
+    volumes:
+      - ./Results/:/workspace/Projects/${PROJECT_NAME}/Results/TestExecution/${RELEASE_NAME}/${TESTSET_NAME}
